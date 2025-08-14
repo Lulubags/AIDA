@@ -1,0 +1,18 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "npm"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = [
+  "mkdir -p dist/public",
+  "cd client && npm run build --if-present || echo 'Frontend build skipped'",
+  "npx esbuild server/index.ts --bundle --platform=node --target=node20 --format=esm --outdir=dist --packages=external"
+]
+
+[start]
+cmd = "node dist/index.js"
+
+[variables]
+NODE_ENV = "production"
